@@ -84,3 +84,4 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines.
 
 MIT - see [LICENSE](LICENSE) for details.
 <\!-- CI test -->
+// Build triggered after core package publish
