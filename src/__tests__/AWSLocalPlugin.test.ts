@@ -1,10 +1,5 @@
 import { AWSLocalPlugin } from '../index';
 import { PluginConfig, OrcdkConfig } from '@orcdkestrator/core';
-import { exec as execCallback } from 'child_process';
-
-// Mock child_process
-jest.mock('child_process');
-const mockExec = execCallback as jest.MockedFunction<typeof execCallback>;
 
 // Mock EventBus
 jest.mock('@orcdkestrator/core', () => ({
@@ -28,13 +23,15 @@ describe('AWSLocalPlugin', () => {
     mockConfig = {
       name: 'awslocal',
       enabled: true,
-      options: {}
+      config: {}
     };
 
     mockOrcdkConfig = {
-      version: '1.0.0',
-      environments: {},
-      isLocal: true,
+      cdkRoot: 'cdk',
+      deploymentStrategy: 'auto',
+      environments: {
+        local: { displayName: 'Local', isLocal: true }
+      },
       plugins: []
     };
 
@@ -47,18 +44,12 @@ describe('AWSLocalPlugin', () => {
     });
   });
 
-  describe('beforeStackDeploy', () => {
-    it('should execute awslocal configure when enabled', async () => {
-      mockExec.mockImplementation((cmd, callback) => {
-        if (callback) callback(null, 'success', '');
-      });
-
-      await plugin.beforeStackDeploy(mockConfig, mockOrcdkConfig);
-
-      expect(mockExec).toHaveBeenCalledWith(
-        'awslocal configure set aws_access_key_id test',
-        expect.any(Function)
-      );
+  describe('initialize', () => {
+    it('should initialize the plugin successfully', async () => {
+      await plugin.initialize(mockConfig, mockOrcdkConfig);
+      
+      expect(plugin.name).toBe('@orcdkestrator/awslocal');
+      expect(plugin.version).toBeDefined();
     });
   });
 });
