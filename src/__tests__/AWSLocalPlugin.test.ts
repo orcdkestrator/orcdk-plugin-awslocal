@@ -40,7 +40,7 @@ describe('AWSLocalPlugin', () => {
 
   describe('initialization', () => {
     it('should have correct name', () => {
-      expect(plugin.name).toBe('awslocal');
+      expect(plugin.name).toBe('@orcdkestrator/awslocal');
     });
   });
 
